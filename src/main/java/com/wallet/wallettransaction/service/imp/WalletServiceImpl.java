@@ -7,18 +7,20 @@ import com.wallet.wallettransaction.repository.WalletRepository;
 import com.wallet.wallettransaction.service.WalletService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
-
+@Service
 public class WalletServiceImpl implements WalletService {
 
     @Autowired
     private WalletRepository walletRepository;
 
     @Override
-    public Wallet getWalletById(String id) {
+    public Wallet getWalletById(UUID id) {
         return walletRepository.findById(id).orElseThrow(() -> new WalletNotFundException("Wallet not found with id: " + id));
     }
 
@@ -33,7 +35,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void deleteWallet(String id) {
+    public void deleteWallet(UUID id) {
         walletRepository.deleteById(id);
     }
 
@@ -44,7 +46,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public void deposit(BigDecimal amount, String walletId) {
+    public void deposit(BigDecimal amount, UUID walletId) {
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> new WalletNotFundException("Wallet not funds with id: " + walletId));
         wallet.setBalance(wallet.getBalance().add(amount));
         walletRepository.save(wallet);
@@ -52,7 +54,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public void withDraw(BigDecimal amount, String walletId) throws InsufficientFundsException {
+    public void withDraw(BigDecimal amount, UUID walletId) throws InsufficientFundsException {
         Wallet wallet = walletRepository.findById(walletId).orElseThrow(() -> new WalletNotFundException("Wallet not found with id: " + walletId));
         if (wallet.getBalance().compareTo(amount) == -1) {
             throw new InsufficientFundsException("InsufficientFundsException funds in wallet id: " + walletId);

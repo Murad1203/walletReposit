@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table
@@ -15,7 +17,7 @@ import java.math.BigDecimal;
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
     private String name;
     private String lastname;
     private BigDecimal balance;

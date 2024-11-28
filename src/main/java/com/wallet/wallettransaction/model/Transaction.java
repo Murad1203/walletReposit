@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table
@@ -16,13 +18,12 @@ import java.time.LocalDateTime;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
+    private UUID walletId;
+    @Enumerated(EnumType.STRING)
     @Column(name = "operation_type")
     private OperationType operationType;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
-
-    private String wallet;
-
     private BigDecimal amount;
 }

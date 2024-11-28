@@ -9,16 +9,12 @@ import com.wallet.wallettransaction.service.WalletService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
-@RestController("api/v1")
+@RestController
 @Log4j2
 public class WalletController {
 
@@ -30,18 +26,19 @@ public class WalletController {
 
 
     @PostMapping("/create-wallet")
-    public Wallet createWallet(Wallet wallet) {
+    public Wallet createWallet(@RequestBody Wallet wallet) {
         walletService.createWallet(wallet);
         return wallet;
     }
 
     @PostMapping("/wallet")
-    public Transaction postTransaction(Transaction transaction) throws InsufficientFundsException {
+    public Transaction postTransaction(@RequestBody Transaction transaction) throws InsufficientFundsException {
+        log.info("______-----_____:   " + transaction);
         if (transaction.getOperationType().equals(OperationType.DEPOSIT)) {
-            walletService.deposit(transaction.getAmount(), transaction.getWallet());
+            walletService.deposit(transaction.getAmount(), transaction.getWalletId());
         }
         else if (transaction.getOperationType().equals(OperationType.WITHDRAW)) {
-            walletService.withDraw(transaction.getAmount(), transaction.getWallet());
+            walletService.withDraw(transaction.getAmount(), transaction.getWalletId());
         }
         else {
             log.error("Doesn't not find Operation type is " + transaction.getOperationType());
@@ -51,7 +48,7 @@ public class WalletController {
     }
 
     @GetMapping("/wallets/{id}")
-    public BigDecimal getBalance(@PathVariable String id) {
+    public BigDecimal getBalance(@PathVariable UUID id) {
         return walletService.getWalletById(id).getBalance();
     }
 

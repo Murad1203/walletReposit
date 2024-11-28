@@ -6,14 +6,15 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
-@Service
+
 public interface WalletService {
-    Wallet getWalletById(String id);
+    Wallet getWalletById(UUID id);
     List<Wallet> getAllWallet();
     void createWallet(Wallet wallet);
-    void deleteWallet(String id);
+    void deleteWallet(UUID id);
     void updateWallet();
-    void deposit(BigDecimal amount, String walletId);
-    void withDraw(BigDecimal amount, String walletId) throws InsufficientFundsException;
+    void deposit(BigDecimal amount, UUID walletId);
+    void withDraw(BigDecimal amount, UUID walletId) throws InsufficientFundsException;
 }
